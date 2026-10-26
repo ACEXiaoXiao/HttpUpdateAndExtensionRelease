@@ -1,0 +1,31 @@
+后续http协议和mqtt协议中
+初始化的默认模板。根据现场实际情况去 增 删 改 。
+注意参数名的大小写，参数名记得带"引号"。
+值可以看现场要求的数据类型，如果不是string Varchar 这些字符串类型，请去掉"引号"。其他类型记得加上"引号"
+{
+  "ticketsNum": "{Barcode}",
+  "weight": "{Weight}",
+  "length": "{Length}",
+  "width": "{Width}",
+  "height": "{Height}",
+  "volume": "{Volume}",//立方毫米  可以删除
+  "warehouse": "",//可以删除
+  "expressname": "",//可以删除
+  "goodsname": "",//可以删除
+  "goodsnum": "",//可以删除
+  "machine": "",//可以删除
+  "memberno": "",//可以删除
+  "myremarks": ""//可以删除
+}
+
+
+//读码软件发送的模板大致为3种。
+1.Json格式 采用的json适配器，适合多条码格式，记得用英文逗号，作为多条码分隔符。整体解析在10ms内（测试是一百个字节内，大概3个条码+重量+尺寸数据）
+{"Code":"{code}","Weight":"{weight}","Length":"{length}","Width":"{width}","Height":"{height}"}
+
+2.五个参数的流式数据   这里为了兼容老设备的格式，所以采用了周期适配器，需要最少等待10ms，所也最快是12ms内   默认是周期适配器，常用设置里做修改。
+{code},{weight},{length},{width},{height}
+
+3.五个参数的流式数据后跟控制CRLF的字符 也就是换行和回车  采用的是Ts里的终止因子适配器，  可以说是性能最强的一种格式，1ms内，基本是微秒的速度。
+截至到2026年10月26日没有扫描软件做适配，也没必要用这么快的速度。
+{code},{weight},{length},{width},{height}
